@@ -296,6 +296,24 @@ select {
     box-shadow: 0 0 10px #ff3333;
 }
 
+.shutdown-btn {
+    background-color: transparent;
+    color: #ff3333;
+    border: 1px solid #ff3333;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.shutdown-btn:hover {
+    background-color: #ff3333;
+    color: #000;
+    box-shadow: 0 0 10px #ff3333;
+}
+
 /* Responsive Design for Mobile Devices (Android/iOS) */
 @media (max-width: 600px) {
     .container {

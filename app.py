@@ -9,6 +9,8 @@ from datetime import datetime
 from flask import Flask, request, jsonify, render_template, send_file
 import yt_dlp
 import re
+import os
+import signal
 
 if getattr(sys, 'frozen', False):
     application_path = os.path.dirname(sys.executable)
@@ -147,6 +149,12 @@ def cancel_download():
     if download_id in active_downloads:
         active_downloads[download_id]['status'] = 'cancelled'
     return jsonify({'message': 'Cancelled successfully'})
+
+@app.route('/api/shutdown', methods=['POST'])
+def shutdown():
+    print("Shutting down the server by user request...")
+    os.kill(os.getpid(), signal.SIGINT)
+    return jsonify({'message': 'Shutting down'})
 
 def run_playlist_download(url, format_selector, download_id):
     ydl_opts = {

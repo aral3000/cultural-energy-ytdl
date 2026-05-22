@@ -317,4 +317,26 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem('activeDownload');
         }
     }
+    
+    // Shutdown Button Logic
+    const shutdownBtn = document.getElementById('shutdownBtn');
+    if (shutdownBtn) {
+        shutdownBtn.addEventListener('click', async () => {
+            if (confirm("Apakah Anda yakin ingin mematikan aplikasi dan keluar?")) {
+                try {
+                    await fetch('/api/shutdown', { method: 'POST' });
+                } catch (e) {
+                    // Usually fetch fails if server shuts down instantly
+                }
+                document.body.innerHTML = `
+                    <div style="text-align:center; padding: 50px; color: #39ff14;">
+                        <h2>Aplikasi Telah Dimatikan.</h2>
+                        <p>Anda sekarang bisa menutup tab browser ini dengan aman.</p>
+                    </div>
+                `;
+                // Attempt to close window (might be blocked by browser policy, hence the message above)
+                setTimeout(() => window.close(), 1000);
+            }
+        });
+    }
 });
