@@ -156,8 +156,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     const speedStr = data._speed_str || 'Unknown speed';
                     const etaStr = data._eta_str || 'Unknown ETA';
                     
+                    let textMsg = `Downloading: ${percentStr} at ${speedStr} (ETA: ${etaStr})`;
+                    if (data.playlist_index && data.playlist_count) {
+                        textMsg = `[Video ${data.playlist_index} of ${data.playlist_count}] ` + textMsg;
+                    }
+                    
                     progressBar.style.width = percentStr.replace('%', '') + '%';
-                    progressText.textContent = `Downloading: ${percentStr} at ${speedStr} (ETA: ${etaStr})`;
+                    progressText.textContent = textMsg;
                 } else if (data.status === 'processing') {
                     progressBar.style.width = '100%';
                     progressText.textContent = 'Processing & Merging... Please wait.';

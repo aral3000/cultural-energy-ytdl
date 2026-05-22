@@ -8,6 +8,7 @@ from threading import Timer
 from datetime import datetime
 from flask import Flask, request, jsonify, render_template, send_file
 import yt_dlp
+import re
 
 if getattr(sys, 'frozen', False):
     application_path = os.path.dirname(sys.executable)
@@ -105,6 +106,13 @@ active_downloads = {}
 class DownloadCancelled(Exception):
     pass
 
+def clean_str(s):
+    if not isinstance(s, str):
+        return str(s)
+    s = re.sub(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', s)
+    s = re.sub(r'\[\d+(;\d+)*m', '', s)
+    return s.strip()
+
 def get_progress_hook(download_id):
     def hook(d):
         if active_downloads.get(download_id, {}).get('status') == 'cancelled':
@@ -113,10 +121,12 @@ def get_progress_hook(download_id):
         if d['status'] == 'downloading':
             active_downloads[download_id] = {
                 'status': 'downloading',
-                '_percent_str': d.get('_percent_str', '0%'),
-                '_speed_str': d.get('_speed_str', 'Unknown speed'),
-                '_eta_str': d.get('_eta_str', 'Unknown ETA'),
-                'filename': d.get('filename', '')
+                '_percent_str': clean_str(d.get('_percent_str', '0%')),
+                '_speed_str': clean_str(d.get('_speed_str', 'Unknown speed')),
+                '_eta_str': clean_str(d.get('_eta_str', 'Unknown ETA')),
+                'filename': d.get('filename', ''),
+                'playlist_index': d.get('info_dict', {}).get('playlist_index') or d.get('playlist_index'),
+                'playlist_count': d.get('info_dict', {}).get('playlist_count') or d.get('playlist_count')
             }
         elif d['status'] == 'finished':
             if download_id in active_downloads:
@@ -144,6 +154,7 @@ def run_playlist_download(url, format_selector, download_id):
         'outtmpl': os.path.join(DOWNLOAD_FOLDER, '%(playlist_title)s/%(title)s.%(ext)s'),
         'quiet': True,
         'no_warnings': True,
+        'color': 'no_color',
         'ffmpeg_location': FFMPEG_PATH,
         'merge_output_format': 'mp4',
         'progress_hooks': [get_progress_hook(download_id)]
@@ -196,6 +207,7 @@ def run_video_download(url, format_selector, download_id):
         'outtmpl': output_template,
         'quiet': True,
         'no_warnings': True,
+        'color': 'no_color',
         'ffmpeg_location': FFMPEG_PATH,
         'merge_output_format': 'mp4',
         'progress_hooks': [get_progress_hook(download_id)]
