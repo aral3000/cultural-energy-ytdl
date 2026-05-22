@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+venv*/
+ENV/
+env.bak/
+venv.bak/
+
+# Project specifics
+downloads/
+history.json
+YTDL_Cultural_Energy/
+YTDL_Cultural_Energy.zip
+ffmpeg-7.1-essentials_build/
+ffmpeg-win-x86_64-v7.1.exe
+ffmpeg.exe
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# OS
+.DS_Store
+Thumbs.db

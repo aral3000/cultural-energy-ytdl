@@ -1,0 +1,315 @@
+:root {
+    --bg-color: #050505;
+    --panel-bg: #111111;
+    --primary-color: #39ff14; /* Neon Green */
+    --primary-dim: rgba(57, 255, 20, 0.2);
+    --text-color: #e0e0e0;
+    --border-color: #333;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Roboto Mono', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: radial-gradient(circle at 50% 50%, #1a2a1a 0%, #050505 60%);
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    padding: 2rem;
+    background-color: var(--panel-bg);
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 20px var(--primary-dim);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle grid background to enhance hacker feel */
+.container::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(rgba(57, 255, 20, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(57, 255, 20, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+header, main {
+    position: relative;
+    z-index: 1;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    text-shadow: 0 0 10px var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.input-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+input[type="text"] {
+    flex: 1;
+    background-color: #000;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 1rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
+    border-radius: 4px;
+    outline: none;
+    box-shadow: inset 0 0 5px var(--primary-dim);
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus {
+    box-shadow: inset 0 0 15px var(--primary-dim), 0 0 10px var(--primary-dim);
+}
+
+button {
+    background-color: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 1rem 2rem;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--primary-color);
+    color: #000;
+    box-shadow: 0 0 15px var(--primary-color);
+}
+
+button:disabled {
+    border-color: #555;
+    color: #555;
+    cursor: not-allowed;
+}
+
+button:disabled:hover {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#loader {
+    text-align: center;
+    color: var(--primary-color);
+    margin: 2rem 0;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--primary-dim);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem auto;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+#result {
+    border-top: 1px dashed var(--border-color);
+    padding-top: 2rem;
+}
+
+.video-card {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    border: 1px solid #333;
+    border-radius: 4px;
+}
+
+.video-card img {
+    max-width: 200px;
+    border-radius: 4px;
+    border: 1px solid var(--primary-dim);
+}
+
+.video-info h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.download-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background-color: #0a0a0a;
+    padding: 1.5rem;
+    border-radius: 4px;
+    border: 1px solid #222;
+}
+
+select {
+    background-color: #000;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    padding: 0.8rem;
+    font-family: 'Roboto Mono', monospace;
+    outline: none;
+    cursor: pointer;
+}
+
+#errorBox {
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid #ff3333;
+    background-color: rgba(255, 51, 51, 0.1);
+    color: #ff3333;
+    border-radius: 4px;
+}
+
+#historySection {
+    margin-top: 2rem;
+    border-top: 1px dashed var(--border-color);
+    padding-top: 2rem;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.history-header h3 {
+    color: #fff;
+    font-size: 1.2rem;
+}
+
+.history-header button {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+}
+
+.history-item {
+    background-color: #0a0a0a;
+    border: 1px solid #222;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.history-title {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.history-meta {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+#progressContainer {
+    margin-top: 15px;
+    width: 100%;
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 12px;
+    background-color: #111;
+    border: 1px solid var(--primary-color);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px var(--primary-color);
+}
+
+.progress-text {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: #ccc;
+    text-align: center;
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* Responsive Design for Mobile Devices (Android/iOS) */
+@media (max-width: 600px) {
+    .container {
+        padding: 1rem;
+        border-radius: 0;
+        border: none;
+        border-top: 1px solid var(--primary-color);
+        border-bottom: 1px solid var(--primary-color);
+    }
+    h1 {
+        font-size: 1.8rem;
+    }
+    .input-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .video-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .video-card img {
+        max-width: 100%;
+    }
+    button {
+        width: 100%;
+    }
+    .history-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+}

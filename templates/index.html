@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YT Cultural Energy Downloader</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="glitch" data-text="YT_DOWNLOADER">YT_DOWNLOADER</h1>
+            <p class="subtitle">Initialize connection to matrix...</p>
+        </header>
+
+        <main>
+            <div class="input-group">
+                <input type="text" id="urlInput" placeholder="ENTER_YOUTUBE_URL_HERE" autofocus>
+                <button id="analyzeBtn">ANALYZE</button>
+            </div>
+
+            <div id="loader" class="hidden">
+                <div class="spinner"></div>
+                <p>Decrypting data...</p>
+            </div>
+
+            <div id="result" class="hidden">
+                <div class="video-card">
+                    <img id="thumbnail" src="" alt="Video Thumbnail">
+                    <div class="video-info">
+                        <h2 id="videoTitle">Video Title</h2>
+                        <p id="videoDuration">Duration: 00:00</p>
+                    </div>
+                </div>
+
+                <div class="download-section">
+                    <label for="formatSelect">Select Format:</label>
+                    <select id="formatSelect">
+                        <!-- Options will be populated here -->
+                    </select>
+                    <button id="downloadBtn">DOWNLOAD_FILE</button>
+                    
+                    <div id="progressContainer" class="hidden">
+                        <div class="progress-bar-bg">
+                            <div id="progressBar" class="progress-bar-fill"></div>
+                        </div>
+                        <div id="progressText" class="progress-text">Initializing download...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="errorBox" class="hidden"></div>
+
+            <div id="historySection">
+                <div class="history-header">
+                    <h3>DOWNLOAD_HISTORY</h3>
+                    <button id="refreshHistoryBtn">REFRESH</button>
+                </div>
+                <div id="historyList">
+                    <!-- History items will be populated here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
