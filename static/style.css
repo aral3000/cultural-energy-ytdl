@@ -280,6 +280,22 @@ select {
     font-family: 'Roboto Mono', monospace;
 }
 
+.cancel-btn {
+    margin-top: 10px;
+    background-color: transparent;
+    color: #ff3333;
+    border: 1px solid #ff3333;
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+}
+
+.cancel-btn:hover {
+    background-color: #ff3333;
+    color: #000;
+    box-shadow: 0 0 10px #ff3333;
+}
+
 /* Responsive Design for Mobile Devices (Android/iOS) */
 @media (max-width: 600px) {
     .container {

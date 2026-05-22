@@ -102,8 +102,14 @@ def get_info():
 
 active_downloads = {}
 
+class DownloadCancelled(Exception):
+    pass
+
 def get_progress_hook(download_id):
     def hook(d):
+        if active_downloads.get(download_id, {}).get('status') == 'cancelled':
+            raise DownloadCancelled("User cancelled the download")
+            
         if d['status'] == 'downloading':
             active_downloads[download_id] = {
                 'status': 'downloading',
@@ -123,6 +129,14 @@ def get_progress():
     if not download_id:
         return jsonify({'error': 'id required'}), 400
     return jsonify(active_downloads.get(download_id, {'status': 'idle'}))
+
+@app.route('/api/cancel', methods=['POST'])
+def cancel_download():
+    data = request.json or {}
+    download_id = data.get('id')
+    if download_id in active_downloads:
+        active_downloads[download_id]['status'] = 'cancelled'
+    return jsonify({'message': 'Cancelled successfully'})
 
 def run_playlist_download(url, format_selector, download_id):
     ydl_opts = {
@@ -152,6 +166,8 @@ def run_playlist_download(url, format_selector, download_id):
                 'format': format_selector,
                 'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             })
+    except DownloadCancelled:
+        print(f"Download {download_id} cancelled by user.")
     except Exception as e:
         active_downloads[download_id] = {'status': 'error', 'error': str(e)}
         print(f"Error downloading playlist: {e}")
@@ -220,6 +236,8 @@ def run_video_download(url, format_selector, download_id):
                 }
             else:
                 active_downloads[download_id] = {'status': 'error', 'error': 'File not found after download'}
+    except DownloadCancelled:
+        print(f"Download {download_id} cancelled by user.")
     except Exception as e:
         active_downloads[download_id] = {'status': 'error', 'error': str(e)}
 

@@ -53,7 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const response = await fetch(`/api/info?url=${encodeURIComponent(url)}`);
-            const data = await response.json();
+            let data;
+            try {
+                data = await response.json();
+            } catch (parseError) {
+                throw new Error('Invalid server response');
+            }
 
             if (!response.ok) {
                 throw new Error(data.error || 'Failed to fetch video info');
@@ -63,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.isPlaylist = data.is_playlist;
             
             if (data.is_playlist) {
-                thumbnail.src = data.thumbnail || 'https://img.youtube.com/vi/default/hqdefault.jpg'; // use playlist thumbnail or fallback
+                thumbnail.src = data.thumbnail || ''; // fallback empty instead of broken image
                 videoTitle.textContent = `[Playlist] ${data.title}`;
                 videoDuration.textContent = `Videos: ${data.count}`;
                 downloadBtn.textContent = 'DOWNLOAD PLAYLIST TO LOCAL FOLDER';
@@ -71,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 thumbnail.src = data.thumbnail || '';
                 videoTitle.textContent = data.title || 'Unknown Title';
                 videoDuration.textContent = `Duration: ${formatTime(data.duration)}`;
-                downloadBtn.textContent = 'DOWNLOAD_FILE';
+                downloadBtn.textContent = 'DOWNLOAD SINGLE VIDEO';
             }
 
             // Populate advanced smart formats
@@ -108,28 +113,60 @@ document.addEventListener('DOMContentLoaded', () => {
         const progressContainer = document.getElementById('progressContainer');
         const progressBar = document.getElementById('progressBar');
         const progressText = document.getElementById('progressText');
+        const cancelBtn = document.getElementById('cancelBtn');
         
         progressContainer.classList.remove('hidden');
+        cancelBtn.classList.remove('hidden'); // Show cancel button
         progressBar.style.width = '0%';
         progressText.textContent = 'Initializing...';
 
         if (progressInterval) clearInterval(progressInterval);
 
+        // Cancel handler
+        const cancelHandler = async () => {
+            clearInterval(progressInterval);
+            localStorage.removeItem('activeDownload');
+            progressText.textContent = 'Cancelling...';
+            cancelBtn.classList.add('hidden');
+            
+            try {
+                await fetch('/api/cancel', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: downloadId })
+                });
+            } catch (err) {}
+            
+            progressContainer.classList.add('hidden');
+            downloadBtn.textContent = window.isPlaylist ? 'DOWNLOAD PLAYLIST TO LOCAL FOLDER' : 'DOWNLOAD SINGLE VIDEO';
+            downloadBtn.disabled = false;
+        };
+
+        // Remove old listener if exists, add new
+        cancelBtn.onclick = cancelHandler;
+
         progressInterval = setInterval(async () => {
             try {
                 const response = await fetch(`/api/progress?id=${encodeURIComponent(downloadId)}`);
+                if (!response.ok) return;
                 const data = await response.json();
 
                 if (data.status === 'downloading') {
-                    progressBar.style.width = data._percent_str.replace('%', '') + '%';
-                    progressText.textContent = `Downloading: ${data._percent_str} at ${data._speed_str} (ETA: ${data._eta_str})`;
+                    const percentStr = data._percent_str || '0%';
+                    const speedStr = data._speed_str || 'Unknown speed';
+                    const etaStr = data._eta_str || 'Unknown ETA';
+                    
+                    progressBar.style.width = percentStr.replace('%', '') + '%';
+                    progressText.textContent = `Downloading: ${percentStr} at ${speedStr} (ETA: ${etaStr})`;
                 } else if (data.status === 'processing') {
                     progressBar.style.width = '100%';
                     progressText.textContent = 'Processing & Merging... Please wait.';
+                    cancelBtn.classList.add('hidden'); // Hide cancel when processing
                 } else if (data.status === 'finished') {
                     clearInterval(progressInterval);
                     progressBar.style.width = '100%';
                     progressText.textContent = 'Completed!';
+                    cancelBtn.classList.add('hidden');
                     localStorage.removeItem('activeDownload');
                     loadHistory();
                     
@@ -138,15 +175,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     setTimeout(() => {
                         progressContainer.classList.add('hidden');
-                        downloadBtn.textContent = window.isPlaylist ? 'DOWNLOAD PLAYLIST TO LOCAL FOLDER' : 'DOWNLOAD_FILE';
+                        downloadBtn.textContent = window.isPlaylist ? 'DOWNLOAD PLAYLIST TO LOCAL FOLDER' : 'DOWNLOAD SINGLE VIDEO';
                         downloadBtn.disabled = false;
                     }, 3000);
-                } else if (data.status === 'error') {
+                } else if (data.status === 'error' || data.status === 'cancelled') {
                     clearInterval(progressInterval);
-                    progressText.textContent = 'Error: ' + data.error;
+                    progressText.textContent = data.status === 'cancelled' ? 'Download Cancelled.' : ('Error: ' + data.error);
+                    cancelBtn.classList.add('hidden');
                     localStorage.removeItem('activeDownload');
-                    downloadBtn.textContent = window.isPlaylist ? 'DOWNLOAD PLAYLIST TO LOCAL FOLDER' : 'DOWNLOAD_FILE';
-                    downloadBtn.disabled = false;
+                    setTimeout(() => {
+                        progressContainer.classList.add('hidden');
+                        downloadBtn.textContent = window.isPlaylist ? 'DOWNLOAD PLAYLIST TO LOCAL FOLDER' : 'DOWNLOAD SINGLE VIDEO';
+                        downloadBtn.disabled = false;
+                    }, 3000);
                 }
             } catch (err) {
                 console.error("Progress polling error", err);
@@ -193,11 +234,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ url: currentUrl, format: format, download_id: downloadId })
             });
             
+            let data;
+            try {
+                data = await response.json();
+            } catch(e) {
+                data = { error: 'Invalid server response' };
+            }
+            
             if (!response.ok) {
-                const data = await response.json();
                 showError(data.error || 'Failed to start download');
                 clearInterval(progressInterval);
                 document.getElementById('progressContainer').classList.add('hidden');
+                document.getElementById('cancelBtn').classList.add('hidden');
+                downloadBtn.textContent = window.isPlaylist ? 'DOWNLOAD PLAYLIST TO LOCAL FOLDER' : 'DOWNLOAD SINGLE VIDEO';
+                downloadBtn.disabled = false;
+                localStorage.removeItem('activeDownload');
             }
         } catch (err) {
             showError('Network error starting download');
@@ -256,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
             downloadBtn.disabled = true;
             
             result.classList.remove('hidden');
-            startProgressPolling(data.downloadId, data.format);
+            startProgressPolling(data.downloadId, data.format || 'bestvideo+bestaudio/best');
         } catch (e) {
             localStorage.removeItem('activeDownload');
         }
