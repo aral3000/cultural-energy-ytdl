@@ -179,10 +179,20 @@ def run_playlist_download(url, format_selector, download_id):
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             active_downloads[download_id] = {'status': 'finished'}
+            entries = list(info.get('entries', []))
+            playlist_thumbnail = info.get('thumbnail')
+            if not playlist_thumbnail and entries:
+                first_entry = entries[0]
+                if first_entry.get('thumbnails'):
+                    playlist_thumbnail = first_entry.get('thumbnails')[-1].get('url')
+                elif first_entry.get('id'):
+                    playlist_thumbnail = f"https://img.youtube.com/vi/{first_entry.get('id')}/hqdefault.jpg"
+                    
             save_history({
                 'title': f"[Playlist] {info.get('title', 'Unknown Playlist')}",
                 'url': url,
                 'format': format_selector,
+                'thumbnail': playlist_thumbnail or '',
                 'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             })
     except DownloadCancelled:
@@ -246,6 +256,7 @@ def run_video_download(url, format_selector, download_id):
                     'title': info.get('title', 'Unknown Title'),
                     'url': url,
                     'format': format_selector,
+                    'thumbnail': info.get('thumbnail', ''),
                     'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 })
                 

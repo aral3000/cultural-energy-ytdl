@@ -279,10 +279,19 @@ document.addEventListener('DOMContentLoaded', () => {
             history.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'history-item';
+                div.style.display = 'flex';
+                div.style.alignItems = 'center';
+                div.style.gap = '15px';
+                
+                const thumbHtml = item.thumbnail ? `<img src="${item.thumbnail}" style="width: 120px; height: 68px; object-fit: cover; border-radius: 4px; border: 1px solid var(--primary-color);">` : `<div style="width: 120px; height: 68px; background: rgba(0,0,0,0.5); border-radius: 4px; border: 1px solid var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 10px; color: #aaa;">No Image</div>`;
+
                 div.innerHTML = `
-                    <div class="history-title">${item.title}</div>
-                    <div class="history-meta">URL: ${item.url}</div>
-                    <div class="history-meta">Format ID: ${item.format} | Date: ${item.date}</div>
+                    ${thumbHtml}
+                    <div style="flex-grow: 1;">
+                        <div class="history-title" style="margin-bottom: 5px;">${item.title}</div>
+                        <div class="history-meta">URL: ${item.url}</div>
+                        <div class="history-meta">Format ID: ${item.format} | Date: ${item.date}</div>
+                    </div>
                 `;
                 historyList.appendChild(div);
             });
