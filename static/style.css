@@ -1,10 +1,11 @@
 :root {
-    --bg-color: #050505;
-    --panel-bg: #111111;
-    --primary-color: #39ff14; /* Neon Green */
-    --primary-dim: rgba(57, 255, 20, 0.2);
-    --text-color: #e0e0e0;
-    --border-color: #333;
+    --bg-color: #05141e;
+    --panel-bg: rgba(11, 51, 77, 0.6);
+    --primary-color: #5af5ce; /* Bioluminescence Aquamarine */
+    --primary-dim: rgba(90, 245, 206, 0.2);
+    --secondary-color: #74d1d6; /* Shallow Water Cyan */
+    --border-color: #3d708f; /* Ocean Blue */
+    --text-color: #e0f2f5;
 }
 
 * {
@@ -18,10 +19,13 @@ body {
     color: var(--text-color);
     font-family: 'Roboto Mono', monospace;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-image: radial-gradient(circle at 50% 50%, #1a2a1a 0%, #050505 60%);
+    background-image: radial-gradient(circle at 50% 20%, #0c3854 0%, #05141e 70%);
+    position: relative;
+    overflow-x: hidden;
 }
 
 .container {
@@ -29,23 +33,34 @@ body {
     max-width: 800px;
     padding: 2rem;
     background-color: var(--panel-bg);
-    border: 1px solid var(--primary-color);
-    box-shadow: 0 0 20px var(--primary-dim);
-    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 0 25px var(--primary-dim);
+    border-radius: 12px;
     position: relative;
     overflow: hidden;
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    margin-top: 2rem;
+    margin-bottom: 8rem;
 }
 
-/* Subtle grid background to enhance hacker feel */
+/* Subtle water ripples background to enhance deep sea feel */
 .container::before {
     content: "";
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(rgba(57, 255, 20, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(57, 255, 20, 0.05) 1px, transparent 1px);
-    background-size: 20px 20px;
+    top: -50%; left: -50%; right: -50%; bottom: -50%;
+    background: radial-gradient(circle, rgba(90, 245, 206, 0.03) 10%, transparent 20%),
+                radial-gradient(circle, rgba(116, 209, 214, 0.02) 10%, transparent 20%);
+    background-size: 40px 40px;
+    background-position: 0 0, 20px 20px;
     pointer-events: none;
     z-index: 0;
+    animation: ripple 15s infinite linear;
+}
+
+@keyframes ripple {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 header, main {
@@ -79,38 +94,39 @@ h1 {
 
 input[type="text"] {
     flex: 1;
-    background-color: #000;
-    border: 1px solid var(--primary-color);
+    background-color: rgba(11, 51, 77, 0.4);
+    border: 1px solid var(--border-color);
     color: var(--primary-color);
     padding: 1rem;
     font-family: 'Roboto Mono', monospace;
     font-size: 1rem;
-    border-radius: 4px;
+    border-radius: 6px;
     outline: none;
-    box-shadow: inset 0 0 5px var(--primary-dim);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
     transition: all 0.3s ease;
 }
 
 input[type="text"]:focus {
-    box-shadow: inset 0 0 15px var(--primary-dim), 0 0 10px var(--primary-dim);
+    border-color: var(--primary-color);
+    box-shadow: inset 0 0 10px var(--primary-dim), 0 0 10px var(--primary-dim);
 }
 
 button {
-    background-color: transparent;
+    background-color: rgba(61, 112, 143, 0.2);
     color: var(--primary-color);
     border: 1px solid var(--primary-color);
     padding: 1rem 2rem;
     font-family: 'Orbitron', sans-serif;
     font-weight: bold;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 6px;
     text-transform: uppercase;
     transition: all 0.3s ease;
 }
 
 button:hover {
     background-color: var(--primary-color);
-    color: #000;
+    color: #05141e;
     box-shadow: 0 0 15px var(--primary-color);
 }
 
@@ -158,15 +174,15 @@ button:disabled:hover {
     display: flex;
     gap: 1.5rem;
     margin-bottom: 2rem;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(11, 51, 77, 0.6);
     padding: 1rem;
-    border: 1px solid #333;
-    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
 }
 
 .video-card img {
     max-width: 200px;
-    border-radius: 4px;
+    border-radius: 6px;
     border: 1px solid var(--primary-dim);
 }
 
@@ -180,20 +196,21 @@ button:disabled:hover {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    background-color: #0a0a0a;
+    background-color: rgba(5, 20, 30, 0.6);
     padding: 1.5rem;
-    border-radius: 4px;
-    border: 1px solid #222;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
 }
 
 select {
-    background-color: #000;
-    color: var(--primary-color);
-    border: 1px solid var(--primary-color);
+    background-color: rgba(11, 51, 77, 0.8);
+    color: var(--secondary-color);
+    border: 1px solid var(--border-color);
     padding: 0.8rem;
     font-family: 'Roboto Mono', monospace;
     outline: none;
     cursor: pointer;
+    border-radius: 4px;
 }
 
 #errorBox {
@@ -229,24 +246,24 @@ select {
 }
 
 .history-item {
-    background-color: #0a0a0a;
-    border: 1px solid #222;
+    background-color: rgba(5, 20, 30, 0.6);
+    border: 1px solid var(--border-color);
     padding: 1rem;
     margin-bottom: 0.5rem;
-    border-radius: 4px;
+    border-radius: 6px;
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
 }
 
 .history-title {
-    color: var(--primary-color);
+    color: var(--secondary-color);
     font-weight: bold;
 }
 
 .history-meta {
     font-size: 0.8rem;
-    color: #888;
+    color: #92b8cd;
 }
 
 #progressContainer {
@@ -256,10 +273,10 @@ select {
 
 .progress-bar-bg {
     width: 100%;
-    height: 12px;
-    background-color: #111;
-    border: 1px solid var(--primary-color);
-    border-radius: 6px;
+    height: 14px;
+    background-color: rgba(5, 20, 30, 0.8);
+    border: 1px solid var(--border-color);
+    border-radius: 7px;
     overflow: hidden;
     position: relative;
 }
@@ -298,20 +315,67 @@ select {
 
 .shutdown-btn {
     background-color: transparent;
-    color: #ff3333;
-    border: 1px solid #ff3333;
+    color: #ff5555;
+    border: 1px solid #ff5555;
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s ease;
     margin-left: 10px;
 }
 
 .shutdown-btn:hover {
-    background-color: #ff3333;
-    color: #000;
-    box-shadow: 0 0 10px #ff3333;
+    background-color: #ff5555;
+    color: #fff;
+    box-shadow: 0 0 10px #ff5555;
+}
+
+/* Sea Decorations (Bubbles & Flora) */
+.sea-decorations {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 150px;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+}
+
+.bubble {
+    position: absolute;
+    bottom: -20px;
+    background-color: rgba(116, 209, 214, 0.4);
+    border-radius: 50%;
+    animation: rise infinite ease-in;
+}
+
+.sea-plants {
+    position: absolute;
+    bottom: -10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 4rem;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 10px var(--primary-color));
+}
+
+.plant {
+    animation: sway 4s infinite ease-in-out alternate;
+    transform-origin: bottom center;
+}
+
+@keyframes rise {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-1000px) scale(1.5); opacity: 0; }
+}
+
+@keyframes sway {
+    0% { transform: rotate(-5deg); }
+    100% { transform: rotate(5deg); }
 }
 
 /* Responsive Design for Mobile Devices (Android/iOS) */

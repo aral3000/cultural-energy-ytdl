@@ -70,6 +70,33 @@
         </main>
     </div>
 
+    <!-- Sea Decorations -->
+    <div class="sea-decorations" id="seaDecorations">
+        <div class="sea-plants">
+            <span class="plant" style="animation-delay: 0s;">🌿</span>
+            <span class="plant" style="animation-delay: 1.5s;">🪸</span>
+            <span class="plant" style="animation-delay: 0.5s;">🦑</span>
+            <span class="plant" style="animation-delay: 2s;">🐠</span>
+            <span class="plant" style="animation-delay: 1s;">🪸</span>
+            <span class="plant" style="animation-delay: 0.8s;">🌿</span>
+        </div>
+    </div>
+
+    <script>
+        // Generate random bubbles
+        const seaDecorations = document.getElementById('seaDecorations');
+        for (let i = 0; i < 15; i++) {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            const size = Math.random() * 15 + 5;
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            bubble.style.left = `${Math.random() * 100}%`;
+            bubble.style.animationDuration = `${Math.random() * 4 + 3}s`;
+            bubble.style.animationDelay = `${Math.random() * 5}s`;
+            seaDecorations.appendChild(bubble);
+        }
+    </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
