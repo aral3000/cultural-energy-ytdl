@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pro Media Downloader</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=4) }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=5) }}">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -236,9 +236,23 @@
             
             bob.appendChild(scaler);
             container.appendChild(bob);
+            container.appendChild(bob);
             fishLayer.appendChild(container);
         }
     </script>
-    <script src="{{ url_for('static', filename='script.js', v=4) }}"></script>
+    
+    <!-- Custom Modal for Shutdown -->
+    <div id="customModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3>Konfirmasi Pemadaman</h3>
+            <p>Apakah Anda yakin ingin mematikan server lokal dan keluar dari aplikasi?</p>
+            <div class="modal-actions">
+                <button id="modalConfirmBtn" class="confirm-btn">Ya, Matikan</button>
+                <button id="modalCancelBtn" class="cancel-btn">Batal</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js', v=5) }}"></script>
 </body>
 </html>
