@@ -1,8 +1,8 @@
 <div align="center">
-  <img src="assets/banner.png" alt="Cultural Energy YouTube Downloader" width="100%">
+  <img src="assets/banner.png" alt="Pro Media Downloader" width="100%">
   <br>
   
-  <h1>Cultural Energy YouTube Downloader</h1>
+  <h1>Pro Media Downloader</h1>
   
   <p>
     <strong>A next-generation, asynchronous, and robust YouTube downloader built with Flask, yt-dlp, and FFmpeg.</strong>
@@ -31,7 +31,7 @@
 - **Playlist Support**: Automatically extract info and download dozens of videos in the background straight to your local folder.
 - **4K/1080p Resolution via FFmpeg**: Seamlessly merge high-resolution separate video tracks (1080p and up) and audio tracks into a single MP4 using the integrated FFmpeg engine.
 - **Smart UI Persistence**: The application utilizes browser `localStorage` to save your download state. You can safely refresh the page without aborting the background download!
-- **Hacker-Style Adaptive UI**: A sleek, dark-mode, neon-green "Cultural Energy" aesthetic that is fully responsive on desktop and mobile devices.
+- **Sleek Adaptive UI**: A modern, deep-sea themed interface that is fully responsive on desktop and mobile devices.
 - **Keyboard Friendly**: Auto-focus on URL input and `Enter` key execution for ultra-fast workflows.
 
 ## 🚀 Quick Start (Portable Version)
@@ -39,9 +39,9 @@
 If you just want to use the application without installing Python or dealing with code, download the compiled `.exe` package!
 
 1. Go to the [Releases](../../releases) tab on this GitHub page.
-2. Download `YTDL_Cultural_Energy.zip`.
+2. Download `Pro_Media_Downloader.zip`.
 3. Extract the folder to your computer.
-4. Double-click `Cultural_Energy_YTDL.exe` — the web interface will automatically open in your browser!
+4. Double-click `Pro_Media_Downloader.exe` — the web interface will automatically open in your browser!
 
 ---
 
