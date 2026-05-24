@@ -352,7 +352,6 @@ select {
     opacity: 0;
     pointer-events: none;
     will-change: transform;
-    animation: rise ease-in infinite, sway 3s ease-in-out infinite alternate;
 }
 
 .sunlight-rays {
