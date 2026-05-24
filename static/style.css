@@ -455,6 +455,53 @@ select {
     100% { transform: translateX(120vw); opacity: 0; }
 }
 
+/* Animated SVG Fishes */
+.fish-layer {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 4;
+    overflow: hidden;
+}
+.fish-container {
+    position: absolute;
+    left: 0;
+    will-change: transform;
+}
+.fish-bob {
+    animation: swim-y ease-in-out infinite alternate;
+    will-change: transform;
+}
+.fish-svg {
+    width: 60px;
+    height: 30px;
+    filter: drop-shadow(0 0 5px var(--primary-color));
+}
+.fish-body { fill: var(--primary-color); }
+.fish-tail {
+    fill: var(--secondary-color);
+    transform-origin: 20px 25px;
+    animation: wag 0.3s ease-in-out infinite alternate;
+}
+.fish-eye { fill: #05141e; }
+
+@keyframes swim-lr {
+    0% { transform: translateX(-100px); }
+    100% { transform: translateX(calc(100vw + 100px)); }
+}
+@keyframes swim-rl {
+    0% { transform: translateX(calc(100vw + 100px)) scaleX(-1); }
+    100% { transform: translateX(-100px) scaleX(-1); }
+}
+@keyframes swim-y {
+    0% { transform: translateY(-15px) rotate(-8deg); }
+    100% { transform: translateY(15px) rotate(8deg); }
+}
+@keyframes wag {
+    0% { transform: rotate(-25deg); }
+    100% { transform: rotate(25deg); }
+}
+
 /* Responsive Design for Mobile Devices (Android/iOS) */
 @media (max-width: 600px) {
     .container {

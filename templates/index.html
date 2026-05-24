@@ -17,6 +17,8 @@
     </div>
     <!-- Deep Sea Currents Layer -->
     <div class="current-layer" id="currentLayer"></div>
+    <!-- Fish Layer -->
+    <div class="fish-layer" id="fishLayer"></div>
     
     <div class="container">
         <header>
@@ -127,6 +129,42 @@
             particle.style.animationDelay = `${Math.random() * 10}s`;
             
             currentLayer.appendChild(particle);
+        }
+
+        // Generate Bionic Animated Fishes
+        const fishLayer = document.getElementById('fishLayer');
+        const numFishes = 8 + Math.floor(Math.random() * 5); // 8 to 12 fishes
+        for (let i = 0; i < numFishes; i++) {
+            const container = document.createElement('div');
+            container.classList.add('fish-container');
+            
+            // Random properties
+            const isLeftToRight = Math.random() > 0.5;
+            const topPos = 10 + Math.random() * 80; // 10% to 90%
+            const duration = 15 + Math.random() * 20; // 15s to 35s to cross screen
+            const delay = Math.random() * 20; // Stagger start times
+            const bobDuration = 2 + Math.random() * 3; // 2s to 5s bobbing
+            const sizeScale = 0.5 + Math.random() * 0.8; // Different sizes
+            
+            container.style.top = `${topPos}%`;
+            container.style.animation = `${isLeftToRight ? 'swim-lr' : 'swim-rl'} ${duration}s linear ${delay}s infinite`;
+            container.style.transform = `scale(${sizeScale})`;
+            
+            const bob = document.createElement('div');
+            bob.classList.add('fish-bob');
+            bob.style.animationDuration = `${bobDuration}s`;
+            
+            // SVG Fish
+            bob.innerHTML = `
+                <svg class="fish-svg" viewBox="0 0 100 50">
+                    <path class="fish-tail" d="M20,25 L0,10 L0,40 Z"/>
+                    <path class="fish-body" d="M20,25 C20,10 60,5 80,25 C60,45 20,40 20,25 Z"/>
+                    <circle class="fish-eye" cx="65" cy="20" r="3"/>
+                </svg>
+            `;
+            
+            container.appendChild(bob);
+            fishLayer.appendChild(container);
         }
     </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
