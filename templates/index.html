@@ -4,17 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pro Media Downloader</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=2) }}">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Sunlight from the surface -->
     <div class="sunlight-rays"></div>
-    <!-- Animated Ocean Waves -->
-    <div class="ocean">
-        <div class="wave"></div>
-        <div class="wave"></div>
-    </div>
+    <!-- Animated Morphing Ocean Waves -->
+    <svg class="ocean" viewBox="0 0 1000 100" preserveAspectRatio="none">
+        <!-- Back Wave -->
+        <path fill="rgba(116, 209, 214, 0.3)" d="M0,100 C150,100 350,0 500,0 C650,0 850,100 1000,100 L1000,0 L0,0 Z">
+            <animate attributeName="d" dur="8s" repeatCount="indefinite" values="
+                M0,100 C150,100 350,0 500,0 C650,0 850,100 1000,100 L1000,0 L0,0 Z;
+                M0,100 C150,0 350,100 500,100 C650,100 850,0 1000,0 L1000,0 L0,0 Z;
+                M0,100 C150,100 350,0 500,0 C650,0 850,100 1000,100 L1000,0 L0,0 Z
+            " />
+        </path>
+        <!-- Front Wave -->
+        <path fill="rgba(90, 245, 206, 0.4)" d="M0,100 C250,0 400,100 600,100 C800,100 900,0 1000,0 L1000,0 L0,0 Z">
+            <animate attributeName="d" dur="12s" repeatCount="indefinite" values="
+                M0,100 C250,0 400,100 600,100 C800,100 900,0 1000,0 L1000,0 L0,0 Z;
+                M0,100 C250,100 400,0 600,0 C800,0 900,100 1000,100 L1000,0 L0,0 Z;
+                M0,100 C250,0 400,100 600,100 C800,100 900,0 1000,0 L1000,0 L0,0 Z
+            " />
+        </path>
+    </svg>
     <!-- Deep Sea Currents Layer -->
     <div class="current-layer" id="currentLayer"></div>
     <!-- Fish Layer -->
@@ -109,26 +123,31 @@
             seaDecorations.appendChild(bubble);
         }
 
-        // Generate deep sea current particles
+        // Generate deep sea current particles (SNAKE STYLE!)
         const currentLayer = document.getElementById('currentLayer');
         for (let i = 0; i < 25; i++) {
+            const wrapper = document.createElement('div');
+            wrapper.style.position = 'absolute';
+            wrapper.style.top = `${Math.random() * 100}%`;
+            wrapper.style.width = '100%';
+            
+            // Horizontal sweep animation on the wrapper
+            const sweepDur = 15 + Math.random() * 10;
+            wrapper.style.animation = `sweep ${sweepDur}s linear ${-(Math.random() * 20)}s infinite`;
+            
             const particle = document.createElement('div');
             particle.classList.add('current-particle');
             
-            // Random width between 50px and 200px
-            const width = Math.random() * 150 + 50;
+            // Random width between 80px and 200px
+            const width = Math.random() * 120 + 80;
             particle.style.width = `${width}px`;
             
-            // Random vertical position
-            particle.style.top = `${Math.random() * 100}%`;
+            // Vertical snake bobbing animation on the particle itself
+            const bobDur = 2 + Math.random() * 3;
+            particle.style.animation = `snake-bob ${bobDur}s ease-in-out ${-(Math.random() * 5)}s infinite alternate`;
             
-            // Random animation duration (speed of the current)
-            particle.style.animationDuration = `${Math.random() * 8 + 3}s`;
-            
-            // Random delay so they don't all start at once
-            particle.style.animationDelay = `${Math.random() * 10}s`;
-            
-            currentLayer.appendChild(particle);
+            wrapper.appendChild(particle);
+            currentLayer.appendChild(wrapper);
         }
 
         // Generate Bionic Animated Fishes
