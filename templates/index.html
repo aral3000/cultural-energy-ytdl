@@ -47,7 +47,7 @@
 
         <main>
             <div class="input-group">
-                <input type="text" id="urlInput" placeholder="ENTER_YOUTUBE_URL_HERE" autofocus>
+                <input type="text" id="urlInput" placeholder="Enter YouTube URL Here..." autofocus>
                 <button id="analyzeBtn">ANALYZE</button>
             </div>
 
@@ -70,7 +70,7 @@
                     <select id="formatSelect">
                         <!-- Options will be populated here -->
                     </select>
-                    <button id="downloadBtn">DOWNLOAD_FILE</button>
+                    <button id="downloadBtn">DOWNLOAD FILE</button>
                     
                     <div id="progressContainer" class="hidden">
                         <div class="progress-bar-bg">
@@ -86,7 +86,7 @@
 
             <div id="historySection">
                 <div class="history-header">
-                    <h3>DOWNLOAD_HISTORY</h3>
+                    <h3>DOWNLOAD HISTORY</h3>
                     <button id="refreshHistoryBtn">REFRESH</button>
                 </div>
                 <div id="historyList">
@@ -239,6 +239,6 @@
             fishLayer.appendChild(container);
         }
     </script>
-    <script src="{{ url_for('static', filename='script.js', v=2) }}"></script>
+    <script src="{{ url_for('static', filename='script.js', v=3) }}"></script>
 </body>
 </html>

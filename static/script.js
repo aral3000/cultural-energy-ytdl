@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!currentUrl) return;
 
         const originalText = downloadBtn.textContent;
-        downloadBtn.textContent = 'INITIATING_DOWNLOAD...';
+        downloadBtn.textContent = 'INITIATING DOWNLOAD...';
         downloadBtn.disabled = true;
 
         const downloadId = generateUUID();
@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 div.style.alignItems = 'center';
                 div.style.gap = '15px';
                 
-                const thumbHtml = item.thumbnail ? `<img src="${item.thumbnail}" style="width: 120px; height: 68px; object-fit: cover; border-radius: 4px; border: 1px solid var(--primary-color);">` : `<div style="width: 120px; height: 68px; background: rgba(0,0,0,0.5); border-radius: 4px; border: 1px solid var(--primary-color); display: flex; align-items: center; justify-content: center; font-size: 10px; color: #aaa;">No Image</div>`;
+                const thumbHtml = item.thumbnail ? `<img src="${item.thumbnail}" style="width: 120px; height: 68px; object-fit: cover; border-radius: 4px; border: 1px solid var(--primary-color);">` : `<div style="width: 120px; height: 68px; background: rgba(0,0,0,0.5); border-radius: 4px; border: 1px solid var(--primary-color); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; color: #aaa; text-align: center; line-height: 1.2;"><span style="font-size: 16px; font-weight: bold; color: var(--primary-color); margin-bottom: 2px;">!</span><span>Thumbnail</span><span>Not Found</span></div>`;
 
                 div.innerHTML = `
                     ${thumbHtml}
@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
             thumbnail.src = data.thumbnail;
             videoTitle.textContent = data.title;
             videoDuration.textContent = data.duration;
-            downloadBtn.textContent = 'RESUMING_PROGRESS...';
+            downloadBtn.textContent = 'RESUMING PROGRESS...';
             downloadBtn.disabled = true;
             
             result.classList.remove('hidden');
