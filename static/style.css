@@ -1,11 +1,11 @@
 :root {
     --bg-color: #05141e;
     --panel-bg: rgba(11, 51, 77, 0.6);
-    --primary-color: #5af5ce; /* Bioluminescence Aquamarine - Accent Only */
-    --primary-dim: rgba(90, 245, 206, 0.1);
+    --primary-color: #5af5ce; /* Bioluminescence Aquamarine */
+    --primary-dim: rgba(90, 245, 206, 0.2);
     --secondary-color: #74d1d6; /* Shallow Water Cyan */
-    --border-color: rgba(255, 255, 255, 0.1); /* Soft frosted border */
-    --text-color: #e2f1f8; /* Soft white text */
+    --border-color: #3d708f; /* Ocean Blue */
+    --text-color: #e0f2f5;
 }
 
 * {
@@ -20,8 +20,9 @@ body {
     font-family: 'Roboto Mono', monospace;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* Moved to top */
     align-items: center;
+    padding-top: 10vh; /* Pushed down a bit from the very top */
     min-height: 100vh;
     background-image: radial-gradient(circle at 50% 20%, #0c3854 0%, #05141e 70%);
     position: relative;
@@ -31,29 +32,35 @@ body {
 .container {
     width: 100%;
     max-width: 800px;
-    padding: 3rem;
+    padding: 2rem;
     background-color: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Soft drop shadow */
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 25px var(--primary-dim); /* Glowing drop shadow */
     border-radius: 12px;
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(10px);
     z-index: 10;
-    margin-top: 2rem;
     margin-bottom: 8rem;
 }
 
-/* Subtle water background to enhance deep sea feel without spinning */
+/* Subtle water background to enhance deep sea feel */
 .container::before {
     content: "";
     position: absolute;
     top: -50%; left: -50%; right: -50%; bottom: -50%;
-    background: radial-gradient(circle, rgba(116, 209, 214, 0.02) 10%, transparent 20%);
+    background: radial-gradient(circle, rgba(90, 245, 206, 0.03) 10%, transparent 20%),
+                radial-gradient(circle, rgba(116, 209, 214, 0.02) 10%, transparent 20%);
     background-size: 40px 40px;
     background-position: 0 0, 20px 20px;
     pointer-events: none;
     z-index: 0;
+    animation: ripple 15s infinite linear;
+}
+
+@keyframes ripple {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 header, main {
@@ -68,9 +75,9 @@ header {
 
 h1 {
     font-family: 'Orbitron', sans-serif;
-    color: var(--text-color);
+    color: var(--primary-color);
     font-size: 2.5rem;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    text-shadow: 0 0 10px var(--primary-color);
     margin-bottom: 0.5rem;
 }
 
@@ -87,32 +94,32 @@ h1 {
 
 input[type="text"] {
     flex: 1;
-    background-color: rgba(5, 20, 30, 0.4);
+    background-color: rgba(11, 51, 77, 0.4);
     border: 1px solid var(--border-color);
-    color: var(--text-color);
-    padding: 1rem 1.5rem;
+    color: var(--primary-color);
+    padding: 1rem;
     font-family: 'Roboto Mono', monospace;
     font-size: 1rem;
-    border-radius: 8px;
+    border-radius: 6px;
     outline: none;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
     transition: all 0.3s ease;
 }
 
 input[type="text"]:focus {
-    border-color: var(--secondary-color);
-    box-shadow: 0 0 0 2px rgba(116, 209, 214, 0.2);
+    border-color: var(--primary-color);
+    box-shadow: inset 0 0 10px var(--primary-dim), 0 0 10px var(--primary-dim);
 }
 
 button {
-    background-color: rgba(61, 112, 143, 0.3);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
+    background-color: rgba(61, 112, 143, 0.2);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
     padding: 1rem 2rem;
     font-family: 'Orbitron', sans-serif;
     font-weight: bold;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 6px;
     text-transform: uppercase;
     transition: all 0.3s ease;
 }
@@ -120,8 +127,7 @@ button {
 button:hover {
     background-color: var(--primary-color);
     color: #05141e;
-    border-color: var(--primary-color);
-    box-shadow: 0 4px 15px rgba(90, 245, 206, 0.3);
+    box-shadow: 0 0 15px var(--primary-color);
 }
 
 button:disabled {
@@ -176,9 +182,8 @@ button:disabled:hover {
 
 .video-card img {
     max-width: 200px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    border-radius: 6px;
+    border: 1px solid var(--primary-dim);
 }
 
 .video-info h2 {
@@ -281,7 +286,7 @@ select {
     background-color: var(--primary-color);
     width: 0%;
     transition: width 0.3s ease;
-    box-shadow: 0 0 10px rgba(90, 245, 206, 0.4);
+    box-shadow: 0 0 10px var(--primary-color);
 }
 
 .progress-text {
@@ -346,6 +351,23 @@ select {
     animation: rise infinite ease-in;
 }
 
+.sunlight-rays {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40vh;
+    background: linear-gradient(180deg, rgba(90, 245, 206, 0.15) 0%, rgba(116, 209, 214, 0.05) 50%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+    animation: pulse-light 8s infinite alternate ease-in-out;
+}
+
+@keyframes pulse-light {
+    0% { opacity: 0.6; }
+    100% { opacity: 1; }
+}
+
 .sea-plants {
     position: absolute;
     bottom: -10px;
@@ -353,8 +375,8 @@ select {
     display: flex;
     justify-content: space-between;
     font-size: 4rem;
-    opacity: 0.6;
-    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+    opacity: 0.8;
+    filter: drop-shadow(0 0 10px var(--primary-color));
 }
 
 .plant {
