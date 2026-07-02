@@ -21,9 +21,9 @@ else:
     application_path = os.path.dirname(os.path.abspath(__file__))
     app = Flask(__name__)
 
-FFMPEG_PATH = os.path.join(application_path, 'ffmpeg.exe')
-if not os.path.exists(FFMPEG_PATH) and not getattr(sys, 'frozen', False):
-    FFMPEG_PATH = r'C:\Users\Hype JKT\Downloads\ffmpeg-7.1-essentials_build\bin\ffmpeg.exe'
+import imageio_ffmpeg
+
+FFMPEG_PATH = imageio_ffmpeg.get_ffmpeg_exe()
 
 DOWNLOAD_FOLDER = os.path.join(application_path, 'downloads')
 HISTORY_FILE = os.path.join(application_path, 'history.json')
