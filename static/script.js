@@ -183,9 +183,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         downloadBtn.textContent = window.isPlaylist ? 'DOWNLOAD PLAYLIST TO LOCAL FOLDER' : 'DOWNLOAD SINGLE VIDEO';
                         downloadBtn.disabled = false;
                     }, 3000);
-                } else if (data.status === 'error' || data.status === 'cancelled') {
+                } else if (data.status === 'error' || data.status === 'cancelled' || data.status === 'idle') {
                     clearInterval(progressInterval);
-                    progressText.textContent = data.status === 'cancelled' ? 'Download Cancelled.' : ('Error: ' + data.error);
+                    if (data.status === 'idle') {
+                        progressText.textContent = 'Download stopped (Server was restarted).';
+                    } else if (data.status === 'cancelled') {
+                        progressText.textContent = 'Download Cancelled.';
+                    } else {
+                        progressText.textContent = 'Error: ' + data.error;
+                    }
                     cancelBtn.classList.add('hidden');
                     localStorage.removeItem('activeDownload');
                     setTimeout(() => {

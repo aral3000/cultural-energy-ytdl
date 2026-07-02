@@ -211,6 +211,7 @@ def download_playlist_api():
     if not url or not download_id:
         return jsonify({'error': 'URL and download_id are required'}), 400
 
+    active_downloads[download_id] = {'status': 'initializing'}
     thread = threading.Thread(target=run_playlist_download, args=(url, format_selector, download_id))
     thread.start()
     
@@ -282,6 +283,7 @@ def start_download():
     if not url or not download_id:
         return jsonify({'error': 'URL and download_id are required'}), 400
 
+    active_downloads[download_id] = {'status': 'initializing'}
     thread = threading.Thread(target=run_video_download, args=(url, format_selector, download_id))
     thread.start()
     
