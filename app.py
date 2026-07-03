@@ -218,8 +218,8 @@ def download_playlist_api():
     return jsonify({'message': 'Playlist download started in background'})
 
 def run_video_download(url, format_selector, download_id):
-    file_id = str(uuid.uuid4())
-    output_template = os.path.join(DOWNLOAD_FOLDER, f'{file_id}_%(title)s.%(ext)s')
+    # Use deterministic filename based on video title and ID to allow yt-dlp to resume interrupted downloads automatically
+    output_template = os.path.join(DOWNLOAD_FOLDER, '%(title)s [%(id)s].%(ext)s')
 
     ydl_opts = {
         'format': format_selector,
@@ -243,15 +243,18 @@ def run_video_download(url, format_selector, download_id):
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
             
-            downloaded_file = None
-            for f in os.listdir(DOWNLOAD_FOLDER):
-                if f.startswith(file_id):
-                    downloaded_file = os.path.join(DOWNLOAD_FOLDER, f)
-                    break
+            downloaded_file = ydl.prepare_filename(info)
+            if 'bestaudio' in format_selector and 'bestvideo' not in format_selector:
+                downloaded_file = os.path.splitext(downloaded_file)[0] + '.mp3'
+            else:
+                downloaded_file = os.path.splitext(downloaded_file)[0] + '.mp4'
+                
+            if 'requested_downloads' in info and info['requested_downloads']:
+                downloaded_file = info['requested_downloads'][0].get('filepath', downloaded_file)
             
             if downloaded_file and os.path.exists(downloaded_file):
                 actual_filename = os.path.basename(downloaded_file)
-                original_title = actual_filename[len(file_id) + 1:]
+                original_title = actual_filename
                 
                 save_history({
                     'title': info.get('title', 'Unknown Title'),
