@@ -218,8 +218,8 @@ def download_playlist_api():
     return jsonify({'message': 'Playlist download started in background'})
 
 def run_video_download(url, format_selector, download_id):
-    # Use deterministic filename based on video title and ID to allow yt-dlp to resume interrupted downloads automatically
-    output_template = os.path.join(DOWNLOAD_FOLDER, '%(title)s [%(id)s].%(ext)s')
+    # Use deterministic filename based on video title to allow yt-dlp to resume interrupted downloads automatically
+    output_template = os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s')
 
     ydl_opts = {
         'format': format_selector,
