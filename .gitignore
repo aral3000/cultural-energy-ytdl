@@ -28,3 +28,10 @@ dist/
 # OS
 .DS_Store
 Thumbs.db
+
+*.mp4
+*.m4a
+*.webm
+*.part
+*.ytdl
+*.exe
