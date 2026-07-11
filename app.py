@@ -304,6 +304,14 @@ def serve_file():
         
     return send_file(download_data['file_path'], as_attachment=True, download_name=download_data['original_title'])
 
+@app.route('/api/open_folder', methods=['POST'])
+def open_folder():
+    try:
+        os.startfile(DOWNLOAD_FOLDER)
+    except:
+        pass
+    return jsonify({'message': 'Folder opened'})
+
 if __name__ == '__main__':
     Timer(1.5, lambda: webbrowser.open_new("http://localhost:5000/")).start()
     app.run(port=5000)

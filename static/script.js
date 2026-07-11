@@ -176,7 +176,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     loadHistory();
                     
                     if (!window.isPlaylist) {
-                        window.location.href = `/api/serve_file?id=${encodeURIComponent(downloadId)}`;
+                        // Buka folder downloads langsung di Windows Explorer
+                        fetch('/api/open_folder', { method: 'POST' }).catch(() => {});
+                    } else {
+                        fetch('/api/open_folder', { method: 'POST' }).catch(() => {});
                     }
                     setTimeout(() => {
                         progressContainer.classList.add('hidden');
