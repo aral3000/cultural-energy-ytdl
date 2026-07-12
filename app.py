@@ -229,6 +229,8 @@ def run_video_download(url, format_selector, download_id):
         'color': 'no_color',
         'ffmpeg_location': FFMPEG_PATH,
         'merge_output_format': 'mp4',
+        'retries': 50,
+        'fragment_retries': 50,
         'progress_hooks': [get_progress_hook(download_id)]
     }
 
