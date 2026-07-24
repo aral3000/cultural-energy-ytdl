@@ -65,7 +65,7 @@ def get_info():
     ydl_opts = {
         'quiet': True,
         'no_warnings': True,
-        'extract_flat': 'in_playlist' # Fast fetch for playlists
+        'extract_flat': 'in_playlist'  # Only flatten playlist entries, not single videos
     }
 
     try:
@@ -73,7 +73,7 @@ def get_info():
             info = ydl.extract_info(url, download=False)
             
             if info.get('_type') == 'playlist' or 'entries' in info:
-                # It's a playlist
+                # It's a playlist - flat data is enough
                 entries = list(info.get('entries', []))
                 
                 playlist_thumbnail = info.get('thumbnail')
@@ -92,13 +92,74 @@ def get_info():
                     'url': url
                 })
             else:
-                # It's a single video
+                # Single video - formats already available (extract_flat only flattens playlists)
+                formats = info.get('formats', [])
+                
+                def get_best_size(formats, max_height, ext='mp4'):
+                    """Find best video format filesize for given max height"""
+                    # Get best audio size
+                    audio_formats = [f for f in formats if f.get('vcodec') == 'none' and f.get('acodec') != 'none']
+                    best_audio = max(audio_formats, key=lambda f: f.get('filesize') or f.get('filesize_approx') or 0) if audio_formats else None
+                    audio_size = (best_audio.get('filesize') or best_audio.get('filesize_approx') or 0) if best_audio else 0
+
+                    # Get best video format at or below max_height
+                    video_formats = [f for f in formats if 
+                        f.get('vcodec') != 'none' and 
+                        f.get('height') and 
+                        f.get('height') <= max_height and
+                        f.get('ext') == ext]
+                    if not video_formats:
+                        video_formats = [f for f in formats if 
+                            f.get('vcodec') != 'none' and 
+                            f.get('height') and 
+                            f.get('height') <= max_height]
+                    
+                    if not video_formats:
+                        return None
+                    
+                    best_video = max(video_formats, key=lambda f: (f.get('height', 0), f.get('filesize') or f.get('filesize_approx') or 0))
+                    video_size = best_video.get('filesize') or best_video.get('filesize_approx') or 0
+                    total = video_size + audio_size
+                    return total if total > 0 else None
+                
+                def get_audio_size(formats):
+                    """Get best audio only estimated size"""
+                    audio_formats = [f for f in formats if f.get('vcodec') == 'none' and f.get('acodec') != 'none']
+                    if not audio_formats:
+                        return None
+                    best = max(audio_formats, key=lambda f: f.get('filesize') or f.get('filesize_approx') or 0)
+                    size = best.get('filesize') or best.get('filesize_approx') or 0
+                    return size if size > 0 else None
+                
+                def fmt_size(bytes_val):
+                    if not bytes_val:
+                        return None
+                    if bytes_val >= 1024**3:
+                        return f"~{bytes_val/1024**3:.1f} GB"
+                    elif bytes_val >= 1024**2:
+                        return f"~{bytes_val/1024**2:.0f} MB"
+                    else:
+                        return f"~{bytes_val/1024:.0f} KB"
+
+                # Get best overall (no height cap)
+                all_video = [f for f in formats if f.get('vcodec') != 'none' and f.get('height')]
+                best_overall_height = max((f.get('height', 0) for f in all_video), default=9999)
+                
+                format_sizes = {
+                    'best':  fmt_size(get_best_size(formats, best_overall_height)),
+                    '1080p': fmt_size(get_best_size(formats, 1080)),
+                    '720p':  fmt_size(get_best_size(formats, 720)),
+                    '480p':  fmt_size(get_best_size(formats, 480)),
+                    'audio': fmt_size(get_audio_size(formats)),
+                }
+
                 return jsonify({
                     'is_playlist': False,
                     'title': info.get('title'),
                     'thumbnail': info.get('thumbnail'),
                     'duration': info.get('duration'),
-                    'url': url
+                    'url': url,
+                    'format_sizes': format_sizes
                 })
     except Exception as e:
         return jsonify({'error': str(e)}), 500

@@ -80,14 +80,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Populate advanced smart formats
-            formatSelect.innerHTML = '';
+            formatSelect.innerHTML = ''
             
+            const sizes = data.format_sizes || {};
+            const sizeLabel = (key) => sizes[key] ? ` [${sizes[key]}]` : '';
+
             const options = [
-                { value: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', text: 'Best Quality (Auto 4K/1080p) - MP4' },
-                { value: 'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', text: '1080p (FHD) - MP4' },
-                { value: 'bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', text: '720p (HD) - MP4' },
-                { value: 'bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', text: '480p (SD) - MP4' },
-                { value: 'bestaudio/best', text: 'Audio Only (MP3)' }
+                { value: 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', text: `Best Quality (Auto 4K/1080p) - MP4${sizeLabel('best')}` },
+                { value: 'bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', text: `1080p (FHD) - MP4${sizeLabel('1080p')}` },
+                { value: 'bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', text: `720p (HD) - MP4${sizeLabel('720p')}` },
+                { value: 'bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', text: `480p (SD) - MP4${sizeLabel('480p')}` },
+                { value: 'bestaudio/best', text: `Audio Only (MP3)${sizeLabel('audio')}` }
             ];
 
             options.forEach(optData => {
