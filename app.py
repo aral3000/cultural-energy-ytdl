@@ -221,6 +221,8 @@ def run_video_download(url, format_selector, download_id):
     # Use deterministic filename based on video title to allow yt-dlp to resume interrupted downloads automatically
     output_template = os.path.join(DOWNLOAD_FOLDER, '%(title)s.%(ext)s')
 
+    is_audio_only = 'bestaudio' in format_selector and 'bestvideo' not in format_selector
+
     ydl_opts = {
         'format': format_selector,
         'outtmpl': output_template,
@@ -228,18 +230,21 @@ def run_video_download(url, format_selector, download_id):
         'no_warnings': True,
         'color': 'no_color',
         'ffmpeg_location': FFMPEG_PATH,
-        'merge_output_format': 'mp4',
         'retries': 50,
         'fragment_retries': 50,
         'progress_hooks': [get_progress_hook(download_id)]
     }
 
-    if 'bestaudio' in format_selector and 'bestvideo' not in format_selector:
+    if is_audio_only:
+        # Audio only: extract to MP3, do NOT merge with video
         ydl_opts['postprocessors'] = [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }]
+    else:
+        # Video + Audio: merge into MP4
+        ydl_opts['merge_output_format'] = 'mp4'
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
